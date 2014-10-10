@@ -1,0 +1,10 @@
+{{#errors}}
+  - {{.}}<br/>
+{{/errors}}
+<form name="signup" action="/api/v1/users" method="post">
+  Username: <input type="text" name="username">
+  Password: <input type="password" name="password">
+  Email: <input type="email" name="email">
+  <input type="submit" value="Sign up">
+</form>
+
