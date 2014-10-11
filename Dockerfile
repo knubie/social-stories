@@ -42,6 +42,6 @@ RUN luarocks install lustache
 # Unset ENV
 RUN unset SRC_DIR OPENRESTY_VERSION OPENRESTY_PREFIX LAPIS_VERSION
 
-WORKDIR /vagrant
+WORKDIR /code
 
 CMD LAPIS_OPENRESTY=/opt/openresty/nginx/sbin/nginx lapis server production
