@@ -1,6 +1,6 @@
 config = require "lapis.config"
 
-config {"develtopment", "production"}, ->
+config {"development", "production"}, ->
   postgres ->
     backend "pgmoon"
     host "172.17.0.24"
