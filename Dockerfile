@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 RUN apt-get -qq update
 # install build dependencies
 RUN apt-get -qqy install libreadline-dev libncurses5-dev libpcre3-dev \
-  libssl-dev perl make curl git-core
+  libssl-dev perl make curl git-core luarocks # dnsmasq
 
 # build/install OpenResty
 ENV SRC_DIR /opt
@@ -17,8 +17,6 @@ RUN cd $SRC_DIR && \
   cd ngx_openresty-$OPENRESTY_VERSION && \
   ./configure --prefix=$OPENRESTY_PREFIX --with-luajit --with-http_realip_module && \
   make && make install && rm -rf ngx_openresty-$OPENRESTY_VERSION*
-
-RUN apt-get -qqy install luarocks
 
 RUN luarocks install --server=http://rocks.moonscript.org/manifests/leafo \
   lapis $LAPIS_VERSION
