@@ -7,9 +7,9 @@ RUN apt-get -qqy install libreadline-dev libncurses5-dev libpcre3-dev \
 
 # build/install OpenResty
 ENV SRC_DIR /opt
-ENV OPENRESTY_VERSION 1.7.2.1
+ENV OPENRESTY_VERSION 1.7.4.1
 ENV OPENRESTY_PREFIX /opt/openresty
-ENV LAPIS_VERSION 1.0.2
+ENV LAPIS_VERSION 1.0.5
 
 RUN cd $SRC_DIR && \
   curl -LO http://openresty.org/download/ngx_openresty-$OPENRESTY_VERSION.tar.gz && \
