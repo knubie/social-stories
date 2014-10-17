@@ -26,6 +26,7 @@ validate_functions.password_match = (password, username) ->
 
 lapis.serve class extends lapis.Application
   "/console": console.make!
+
   "/": =>
     render 'index',
       username: @session.username
@@ -33,7 +34,7 @@ lapis.serve class extends lapis.Application
   "/reset": =>
     db.delete "users", "true"
 
-  "/signup": =>
+  "/signup": => -- users#new
     render 'signup'
 
   "/login": respond_to
@@ -48,6 +49,15 @@ lapis.serve class extends lapis.Application
           {"username", exists: true}
           {"password", exists: true, password_match: @params.username}
         }
+
+        -- Check consumer token/secret
+        -- Assign appropriate access token/secret
+        user = Users\find username: @params.username
+        app = Apps\find consumer_key: @params.consumer_key
+        json
+          consumer_key: app.consumer_key
+          access_token: app.access_token
+          access_secret: app.access_secret
 
         @session.username = @params.username
         redirect_to: "/"
@@ -97,3 +107,50 @@ lapis.serve class extends lapis.Application
   "/api/v1/users/:id": => -- users#show
     user = Users\find @params.id
     json: user
+
+  -- OAuth
+  "/oauth/request_token": =>
+    --6.1.2 "issue unauthorized request_token to client"
+    -- server<-->server
+    --server - GET-RES /oauth/request_token
+    --verify timestamp
+    --verify timestamp + nonce
+    --verify signature (consumer_key + consumer_secret + nonce + timestamp)
+    --generate request_token
+    --mark request_token as unauthorized (i.e. verification: null)
+    --send request_token
+    --send request_secret
+
+  "/oauth/authorize": =>
+    -- client<->server
+    -- sent: request_token, username, password
+    -- verify username/password
+    -- mark request_token as authorized (i.e request_token.verification = String)
+    -- send 200 request_token, verification
+
+    --@params =
+      --oauth_token: "The un-verified request token"
+      --oauth_callback: "URL the server redirects the user to."
+      --optional:
+        --username:
+        --password:
+
+    if @params.username
+      if user = Users\find username: @params.username
+        request_token = RequestTokens\find token: @params.oauth_token
+        if request_token and not request_token.verifier
+          request_token.verifier = random.token(5)
+          json
+            oauth_token: @params.oauth_token
+            oauth_verifier: request_token.verifier
+    else
+      "Signin page not yet implemented."
+
+  "/oauth/access_token": =>
+    -- server<-->server
+    --verify request_signature
+    --verify request_token has not been exchanged previously (i.e. that it exists)
+    --verify request_token matches consumer_key
+    -- (i.e. request_token.app_id == App\find(consumer-id: @params.consumer-id).id)
+    --send access_token
+    --send access_secret

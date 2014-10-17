@@ -16,14 +16,20 @@ class Apps extends Model
     -- A value used by the Consumer to identify itself to the Service Provider.
   -- consumer_secret: random.token(50)
     -- A secret used by the Consumer to establish ownership of the Consumer Key.
-  -- request token (not implemented)
-    -- A value used by the Consumer to obtain authorization from the User,
-    -- and exchanged for an Access Token.
-  -- access_token: "#{user_id}-#{random.token(40)}
-    -- A value used by the Consumer to gain access to the Protected Resources
-    -- on behalf of the User, instead of using the User’s Service Provider
-    -- credentials.
-  -- access_token_secret: random.token(45)
-    -- A secret used by the Consumer to establish ownership of a given Token.
 
-{:Users, :Stories, :Apps}
+class RequestTokens extends Model
+  -- id: Integer
+  -- user_id: foreign-key
+  -- app_id: foreign-key
+  -- token: random.token(45)
+  -- secret: random.token(40)
+  -- verifier: random.token(40)
+
+class AccessTokens extends Model
+  -- id: Integer
+  -- user_id: foreign-key
+  -- app_id: foreign-key
+  -- token: random.token(40)
+  -- secret: random.token(45)
+
+{:Users, :Stories, :Apps, :RequestTokens, :AccessTokens}

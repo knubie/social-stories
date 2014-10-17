@@ -48,4 +48,22 @@ import create_table, add_column, types from require "lapis.db.schema"
     }
   [5]: =>
     add_column "users", "salt", types.varchar
+  [6]: =>
+    create_table "request_tokens", {
+      {"id", types.serial}
+      {"user_id", types.foreign_key}
+      {"app_id", types.foreign_key}
+
+      {"token", types.varchar}
+      {"secret", types.varchar}
+      {"verifier", types.varchar}
+    }
+    create_table "access_tokens", {
+      {"id", types.serial}
+      {"user_id", types.foreign_key}
+      {"app_id", types.foreign_key}
+
+      {"token", types.varchar}
+      {"secret", types.varchar}
+    }
 }
